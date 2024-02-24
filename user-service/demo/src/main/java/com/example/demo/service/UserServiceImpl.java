@@ -67,7 +67,6 @@ public class UserServiceImpl implements UserService{
         return userResponse;
     }
 
-
     @Override
     public UserResponse findUserById(Long id) {
         try {
@@ -83,7 +82,6 @@ public class UserServiceImpl implements UserService{
             throw e;
         }
     }
-
 
     @Override
     public UserResponse updateUserById(Long id, UserRequest userRequest) {
@@ -104,7 +102,6 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-
     @Override
     public void deleteById(Long id) {
         try {
@@ -121,7 +118,6 @@ public class UserServiceImpl implements UserService{
             throw e;
         }
     }
-
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -157,6 +153,5 @@ public class UserServiceImpl implements UserService{
         Pageable pageReq= PageRequest.of(pageIndex, pageSize, sort);
         return userRepository.findAll(pageReq);
     }
-
 
 }
