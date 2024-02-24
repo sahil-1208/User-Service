@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.excel.ReadDataFromExcel;
 import com.example.demo.exception.UserResponseException;
 import com.example.demo.model.UserRequest;
 import com.example.demo.model.UserResponse;
@@ -8,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -18,6 +21,18 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+
+    @PostMapping("/multipart")
+    public ResponseEntity<?> uploadUserDetailsExcel(@RequestParam("file") MultipartFile file) {
+
+        if(ReadDataFromExcel.checkExcelFormat(file)) {
+            userService.save(file);
+            return ResponseEntity.ok(Map.of("message","file is upload"));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("uplod excel file");
+
+    }
 
     @PostMapping
     public ResponseEntity<Optional<UserResponse>> createUser(@RequestBody UserRequest userRequest) {

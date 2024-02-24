@@ -6,11 +6,15 @@ import com.example.demo.model.UserRequest;
 import com.example.demo.model.UserResponse;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.utility.Converter;
+import com.example.demo.excel.ReadDataFromExcel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +29,15 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private Converter converter;
+
+    public void save(MultipartFile file) {
+        try {
+            List<UserEntity> listEmployee = ReadDataFromExcel.convertExcelToListOfUser(file.getInputStream());
+            userRepository.saveAll(listEmployee);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     @Override
