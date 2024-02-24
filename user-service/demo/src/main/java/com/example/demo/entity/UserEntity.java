@@ -54,6 +54,7 @@ public class UserEntity {
     private LocalDate date;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
 }
