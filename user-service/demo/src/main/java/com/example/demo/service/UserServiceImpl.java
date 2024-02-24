@@ -10,6 +10,10 @@ import com.example.demo.excel.ReadDataFromExcel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -134,6 +138,24 @@ public class UserServiceImpl implements UserService{
             log.error("Error retrieving all users. Details: {}", e.getMessage());
             throw new UserResponseException("Error retrieving all users");
         }
+    }
+
+    @Override
+    public UserEntity registerUser(UserEntity userEntity) throws Exception
+    {
+        if(userEntity !=null)
+        {
+            return userRepository.save(userEntity);
+        }
+        throw new Exception("User is null");
+    }
+
+    @Override
+    public Page getUserByPage(int pageIndex, int pageSize, String field)
+    {
+        Sort sort= Sort.by(Sort.Direction.ASC,field);
+        Pageable pageReq= PageRequest.of(pageIndex, pageSize, sort);
+        return userRepository.findAll(pageReq);
     }
 
 
