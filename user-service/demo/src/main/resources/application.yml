@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/datingapp2_db
+    url: jdbc:mysql://localhost:3306/jwt_token
     username: root
     password: sahil1208
   jpa:
