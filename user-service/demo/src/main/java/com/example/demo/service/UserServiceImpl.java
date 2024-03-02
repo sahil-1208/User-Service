@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService{
     public List<UserResponse> getAllUsers() {
         try {
             List<UserEntity> userEntities = userRepository.findAll();
-            List<UserResponse> userResponses = new ArrayList<>();
+            List<UserResponse> userResponses = new ArrayList<>(userEntities.size());
 
             for (UserEntity userEntity : userEntities) {
                 userResponses.add(converter.entityToResponse(userEntity));
