@@ -1,18 +1,18 @@
-package com.example.demo.repository.impl;
+package com.example.demo.service.impl;
 
 import com.example.demo.dto.JWTAuthenticationResponse;
 import com.example.demo.dto.RefreshTokenRequest;
 import com.example.demo.dto.SignUpRequest;
-import com.example.demo.dto.SigninRequest;
+import com.example.demo.dto.SignInRequest;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.enums.Gender;
 import com.example.demo.enums.Role;
-import com.example.demo.repository.AuthenticationService;
+import com.example.demo.model.UserResponse;
+import com.example.demo.service.AuthenticationService;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +29,7 @@ public class AuthenticationImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     private final JWTServiceImpl jwtService;
+
     public UserEntity signup(SignUpRequest signUpRequest){
         // id, date, email, first_name, gender, location, mobile, name, password, role, second_name, username
         UserEntity userEntity = new UserEntity();
@@ -46,9 +47,8 @@ public class AuthenticationImpl implements AuthenticationService {
         return userRepository.save(userEntity);
     }
 
-    public JWTAuthenticationResponse signin(SigninRequest signinRequest){
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getEmail(),
-            signinRequest.getPassword()));
+    public JWTAuthenticationResponse signIn(SignInRequest signinRequest){
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getEmail(), signinRequest.getPassword()));
         var user = userRepository.findByEmail(signinRequest.getEmail()).orElseThrow(() ->new IllegalArgumentException("Invalid email or password "));
         var jwt= jwtService.generateToken(user);
         var refereshToken = jwtService.generateRefereshToken(new HashMap<>(),user);
@@ -74,7 +74,7 @@ public class AuthenticationImpl implements AuthenticationService {
    // }
    public JWTAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest){
        String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
-       User userEntity = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
+       UserEntity userEntity = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalArgumentException("User not found"));
        if(jwtService.isTokenValid(refreshTokenRequest.getToken(), userEntity)){
            String jwt = jwtService.generateToken(userEntity);
 

@@ -1,6 +1,6 @@
-package com.example.demo.repository.impl;
+package com.example.demo.service.impl;
 
-import com.example.demo.repository.JWTService;
+import com.example.demo.service.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,10 +17,10 @@ import java.util.function.Function;
 @Service
 public class JWTServiceImpl implements JWTService {
 
-    @Override
-    public String extraxtUserName(String token) {
-        return null;
-    }
+//    @Override
+//    public String extraxtUserName(String token) {
+//        return null;
+//    }
 
     public  String generateToken(UserDetails userDetails){
         return Jwts.builder().setSubject(userDetails.getUsername())
@@ -47,7 +47,7 @@ public class JWTServiceImpl implements JWTService {
         return claimsResolver.apply(claims);
     }
     private Key getSiginKey() {// keep the securite key in their method
-        byte[] key = Decoders.BASE64.decode("6603384152749567654L");
+        byte[] key = Decoders.BASE64.decode("413F4428472B4B6250655368566D5970337336763979244226452948404D6351");
         return Keys.hmacShaKeyFor(key);
     }
 

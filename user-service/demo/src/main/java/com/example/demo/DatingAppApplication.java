@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import java.time.LocalDate;
 
+@ComponentScan(basePackages = {"com.example.demo"})
 @SpringBootApplication
 public class DatingAppApplication implements CommandLineRunner {
 
@@ -20,6 +21,7 @@ public class DatingAppApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(DatingAppApplication.class, args);
+
     }
 
     @Override
@@ -42,4 +44,5 @@ public class DatingAppApplication implements CommandLineRunner {
             userRepository.save(user);
         }
     }
+
 }

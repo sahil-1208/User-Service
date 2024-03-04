@@ -1,6 +1,10 @@
 package com.example.demo.model;
 
 import com.example.demo.enums.Gender;
+import com.example.demo.enums.Role;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +26,5 @@ public class UserResponse {
     private String location;
     private LocalDate date;
     private String gender;
-
 
 }

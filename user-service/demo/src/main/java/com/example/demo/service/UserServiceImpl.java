@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.exception.UserResponseException;
 import com.example.demo.model.UserRequest;
-import com.example.demo.model.UserResponse;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.utility.Converter;
 import com.example.demo.excel.ReadDataFromExcel;
@@ -45,8 +44,8 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public UserResponse create(UserRequest userRequest) {
-        UserResponse userResponse = null;
+    public com.example.demo.model.UserResponse create(UserRequest userRequest) {
+        com.example.demo.model.UserResponse userResponse = null;
 
         try {
             if (Objects.nonNull(userRequest)) {
@@ -68,7 +67,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse findUserById(Long id) {
+    public com.example.demo.model.UserResponse findUserById(Long id) {
         try {
             Optional<UserEntity> userEntityOptional = userRepository.findById(id);
             if (userEntityOptional.isPresent()) {
@@ -84,7 +83,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponse updateUserById(Long id, UserRequest userRequest) {
+    public com.example.demo.model.UserResponse updateUserById(Long id, UserRequest userRequest) {
         try {
             return userRepository.findById(id)
                     .map(userEntity -> {
@@ -120,10 +119,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<UserResponse> getAllUsers() {
+    public List<com.example.demo.model.UserResponse> getAllUsers() {
         try {
             List<UserEntity> userEntities = userRepository.findAll();
-            List<UserResponse> userResponses = new ArrayList<>();
+            List<com.example.demo.model.UserResponse> userResponses = new ArrayList<>();
 
             for (UserEntity userEntity : userEntities) {
                 userResponses.add(converter.entityToResponse(userEntity));

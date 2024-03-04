@@ -3,7 +3,6 @@ package com.example.demo.utility;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.enums.Gender;
 import com.example.demo.model.UserRequest;
-import com.example.demo.model.UserResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,8 +21,8 @@ public class Converter {
 
     }
 
-    public UserResponse entityToResponse(UserEntity userEntity) {
-        UserResponse userResponse = new UserResponse();
+    public com.example.demo.model.UserResponse entityToResponse(UserEntity userEntity) {
+        com.example.demo.model.UserResponse userResponse = new com.example.demo.model.UserResponse();
         userResponse.setId(userEntity.getId());
         userResponse.setName(userEntity.getName());
         userResponse.setEmail(userEntity.getEmail());

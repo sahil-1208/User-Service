@@ -38,7 +38,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Optional<UserResponse>> createUser(@RequestBody UserRequest userRequest) {
-        UserResponse userResponse = null;
+        com.example.demo.model.UserResponse userResponse = null;
         try{
             userResponse = this.userService.create(userRequest);
             System.out.println(userRequest);
@@ -50,9 +50,9 @@ public class UserController {
 
     }
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
-        UserResponse userResponse = userService.findUserById(id);
+        com.example.demo.model.UserResponse userResponse = userService.findUserById(id);
         if(userResponse == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -62,7 +62,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> updateUserById(@PathVariable Long id, @RequestBody UserRequest userRequest) {
         try {
-            UserResponse userResponse = userService.updateUserById(id, userRequest);
+            com.example.demo.model.UserResponse userResponse = userService.updateUserById(id, userRequest);
             return ResponseEntity.ok().body(userResponse);
         } catch (UserResponseException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -85,7 +85,7 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<List<UserResponse>> getAllUsers(){
-        List<UserResponse> list = userService.getAllUsers();
+        List<com.example.demo.model.UserResponse> list = userService.getAllUsers();
         if(list.size()<=0){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

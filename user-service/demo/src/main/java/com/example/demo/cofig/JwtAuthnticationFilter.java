@@ -1,7 +1,7 @@
 package com.example.demo.cofig;
 
-import com.example.demo.repository.JWTService;
-import com.example.demo.repository.ServiceUsers;
+import com.example.demo.service.JWTService;
+import com.example.demo.service.ServiceUsers;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,8 @@ public class JwtAuthnticationFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
 
-    private ServiceUsers serviceUsers;
+    private final ServiceUsers serviceUsers;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
@@ -35,7 +36,7 @@ public class JwtAuthnticationFilter extends OncePerRequestFilter {
             return;
         }
         jwt = authHeader.substring(7);
-        userEmail = jwtService.extraxtUserName(jwt);
+        userEmail = jwtService.extractUserName(jwt);
 
         if(StringUtils.isNotEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = serviceUsers.userDetailsService().loadUserByUsername(userEmail);
