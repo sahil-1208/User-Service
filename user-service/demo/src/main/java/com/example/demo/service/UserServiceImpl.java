@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
             log.info("Displaying all users with pagesize = " + pageSize + " and sorting on basis of " + field);
             return userResponses;
         } catch (Exception exception) {
-            log.error("Error retrieving all users. Details: {}", exception.getMessage());
+            log.error("Error retrieving all users. Details: {}", exception);
             throw new UserResponseException("Error retrieving all users");
         }
     }

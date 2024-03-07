@@ -18,5 +18,6 @@ public class UserRequest {
     private String username;
     private String location;
     private LocalDate date;
+    private String password;
     private String gender;
 }
