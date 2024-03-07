@@ -5,3 +5,5 @@ public class UserResponseException extends RuntimeException{
         super(message);
     }
 }
+
+
