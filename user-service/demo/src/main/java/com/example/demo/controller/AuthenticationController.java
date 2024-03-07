@@ -2,9 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.JWTAuthenticationResponse;
 import com.example.demo.dto.RefreshTokenRequest;
-import com.example.demo.dto.SignUpRequest;
 import com.example.demo.dto.SignInRequest;
-import com.example.demo.entity.UserEntity;
+import com.example.demo.model.UserRequest;
+import com.example.demo.model.UserResponse;
 import com.example.demo.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +21,8 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserEntity> signup(@RequestBody SignUpRequest signUpRequest){
-    return ResponseEntity.ok(authenticationService.signup(signUpRequest));
+    public ResponseEntity<UserResponse> signup(@RequestBody UserRequest userRequest){
+        return ResponseEntity.ok(authenticationService.signup(userRequest));
     }
 
     @PostMapping("/signIn")

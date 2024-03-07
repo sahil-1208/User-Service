@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.exception.UserResponseException;
 import com.example.demo.model.UserRequest;
+import com.example.demo.model.UserResponse;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.utility.Converter;
 import com.example.demo.excel.ReadDataFromExcel;
@@ -42,32 +43,8 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-
     @Override
-    public com.example.demo.model.UserResponse create(UserRequest userRequest) {
-        com.example.demo.model.UserResponse userResponse = null;
-
-        try {
-            if (Objects.nonNull(userRequest)) {
-                UserEntity userEntity = converter.requestToEntity(userRequest);
-                userEntity = userRepository.save(userEntity);
-                userResponse = converter.entityToResponse(userEntity);
-                log.info("User created successfully. User ID: {}", userEntity.getId());
-            } else {
-                log.error("User creation failed. UserRequest is null.");
-            }
-        } catch (DataIntegrityViolationException e) {
-                log.error("Error creating user due to data integrity violation. Details: {}", e.getMessage());
-                // Handle the duplicate value entries
-            } catch (Exception e) {
-                log.error("Error creating user. Details: {}", e.getMessage());
-            }
-
-        return userResponse;
-    }
-
-    @Override
-    public com.example.demo.model.UserResponse findUserById(Long id) {
+    public UserResponse findUserById(Long id) {
         try {
             Optional<UserEntity> userEntityOptional = userRepository.findById(id);
             if (userEntityOptional.isPresent()) {
@@ -83,7 +60,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public com.example.demo.model.UserResponse updateUserById(Long id, UserRequest userRequest) {
+    public UserResponse updateUserById(Long id, UserRequest userRequest) {
         try {
             return userRepository.findById(id)
                     .map(userEntity -> {
@@ -119,7 +96,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<com.example.demo.model.UserResponse> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
         try {
             List<UserEntity> userEntities = userRepository.findAll();
             List<com.example.demo.model.UserResponse> userResponses = new ArrayList<>();

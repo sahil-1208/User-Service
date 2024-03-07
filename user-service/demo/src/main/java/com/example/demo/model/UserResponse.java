@@ -21,10 +21,12 @@ public class UserResponse {
     private String name;
     private String email;
     private String mobile;
-    private String password;
     private String username;
     private String location;
     private LocalDate date;
     private String gender;
+    private String firstName;
+    private String secondName;
+    private Role role;
 
 }

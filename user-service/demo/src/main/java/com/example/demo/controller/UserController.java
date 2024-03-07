@@ -32,21 +32,7 @@ public class UserController {
             userService.save(file);
             return ResponseEntity.ok(Map.of("message","file is upload"));
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("uplod excel file");
-
-    }
-
-    @PostMapping
-    public ResponseEntity<Optional<UserResponse>> createUser(@RequestBody UserRequest userRequest) {
-        com.example.demo.model.UserResponse userResponse = null;
-        try{
-            userResponse = this.userService.create(userRequest);
-            System.out.println(userRequest);
-            return ResponseEntity.ok(Optional.of(userResponse));
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("upload excel file");
 
     }
 
