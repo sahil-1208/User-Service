@@ -44,28 +44,30 @@ public class UserServiceImpl implements UserService{
     }
 
 
-    @Override
     public UserResponse create(UserRequest userRequest) {
-        UserResponse userResponse = null;
-
         try {
-            if (Objects.nonNull(userRequest)) {
-                UserEntity userEntity = converter.requestToEntity(userRequest);
-                userEntity = userRepository.save(userEntity);
-                userResponse = converter.entityToResponse(userEntity);
-                log.info("User created successfully. User ID: {}", userEntity.getId());
-            } else {
+            if (Objects.isNull(userRequest)) {
                 log.error("User creation failed. UserRequest is null.");
-            }
-        } catch (DataIntegrityViolationException e) {
-                log.error("Error creating user due to data integrity violation. Details: {}", e.getMessage());
-                // Handle the duplicate value entries
-            } catch (Exception e) {
-                log.error("Error creating user. Details: {}", e.getMessage());
+                throw new IllegalArgumentException("UserRequest cannot be null.");
             }
 
-        return userResponse;
+            UserEntity userEntity = converter.requestToEntity(userRequest);
+            userEntity = userRepository.save(userEntity);
+            log.info("User created successfully. User ID: {}", userEntity.getId());
+            return converter.entityToResponse(userEntity);
+
+        } catch (DataIntegrityViolationException e) {
+            log.error("Error creating user due to data integrity violation: {}", e.getMessage());
+            throw new DataIntegrityViolationException("Error creating user due to data integrity violation.");
+        } catch (IllegalArgumentException e) {
+            log.error("Error creating user: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Error creating user: {}", e.getMessage());
+            throw new RuntimeException("Error creating user.");
+        }
     }
+
 
     @Override
     public UserResponse findUserById(Long id) {
@@ -136,22 +138,46 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    @Override
-    public UserEntity registerUser(UserEntity userEntity) throws Exception
-    {
-        if(userEntity !=null)
-        {
-            return userRepository.save(userEntity);
+    public List<UserResponse> findUserWithSorting(String field){
+        try{
+            List<UserEntity> userEntities = userRepository.findAll(Sort.by(Sort.Direction.ASC,field));
+            List<UserResponse> userResponses = new ArrayList<>();
+
+            for (UserEntity userEntity : userEntities) {
+                userResponses.add(converter.entityToResponse(userEntity));
+            }
+            log.info("Users are sorted according to "+ field);
+            return userResponses;
+        } catch(Exception exception){
+            log.error("Error retrieving all users. Details: {}", exception.getMessage());
+            throw new UserResponseException("Error retrieving all users");
         }
-        throw new Exception("User is null");
     }
 
-    @Override
-    public Page getUserByPage(int pageIndex, int pageSize, String field)
-    {
-        Sort sort= Sort.by(Sort.Direction.ASC,field);
-        Pageable pageReq= PageRequest.of(pageIndex, pageSize, sort);
-        return userRepository.findAll(pageReq);
+    public Page<UserResponse> findUserWithPaging(int offset, int pageSize){
+        try{
+            Page<UserEntity> userEntities = userRepository.findAll(PageRequest.of(offset, pageSize));
+            Page<UserResponse> userResponses = userEntities.map(converter::entityToResponse);
+            log.info("Displaying all users with pagesize = "+pageSize);
+            return userResponses;
+        } catch(Exception exception){
+            log.error("Error retrieving all users. Details: {}", exception.getMessage());
+            throw new UserResponseException("Error retrieving all users");
+        }
+    }
+
+    public Page<UserResponse> PaginationAndSorting(int offset, int pageSize, String field){
+        try{
+            Page<UserEntity> userEntities = userRepository.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(field)));
+            Page<UserResponse> userResponses = userEntities.map(converter::entityToResponse);
+            log.info("Displaying all users with pagesize = "+pageSize + " and sorting on basis of "+field);
+            return userResponses;
+        } catch(Exception exception){
+            log.error("Error retrieving all users. Details: {}", exception.getMessage());
+            throw new UserResponseException("Error retrieving all users");
+        }
     }
 
 }
+
+

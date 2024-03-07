@@ -13,14 +13,16 @@ import java.util.List;
 public interface UserService {
 
     public UserResponse create(UserRequest userRequest);
+//    public String create(UserRequest userRequest);
     public UserResponse findUserById(Long id);
     public UserResponse updateUserById(Long id, UserRequest userRequest);
     public void deleteById(Long id);
     public List<UserResponse> getAllUsers();
     public void save(MultipartFile file);
 
+    public List<UserResponse> findUserWithSorting(String field);
 
-    public UserEntity registerUser(UserEntity userEntity) throws Exception;
-    public Page<UserEntity> getUserByPage(int pageIndex, int pageSize, String field);
+    Page<UserResponse> findUserWithPaging(int offset, int pageSize);
 
+    public Page<UserResponse> PaginationAndSorting(int offset, int pageSize, String field);
 }
