@@ -18,9 +18,5 @@ public interface UserService {
     public void deleteById(Long id);
     public List<UserResponse> getAllUsers();
     public void save(MultipartFile file);
-
-
-    public UserEntity registerUser(UserEntity userEntity) throws Exception;
-    public Page<UserEntity> getUserByPage(int pageIndex, int pageSize, String field);
-
+    public Page<UserResponse> PaginationAndSorting(int offset, int pageSize, String field);
 }

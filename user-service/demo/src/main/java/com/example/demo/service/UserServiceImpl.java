@@ -17,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -38,33 +37,34 @@ public class UserServiceImpl implements UserService{
         try {
             List<UserEntity> listEmployee = ReadDataFromExcel.convertExcelToListOfUser(file.getInputStream());
             userRepository.saveAll(listEmployee);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            log.error("Error saving data from Excel: {}", exception);
+            throw new RuntimeException("Error saving data from Excel");
         }
     }
 
-
-    @Override
     public UserResponse create(UserRequest userRequest) {
-        UserResponse userResponse = null;
+        if (Objects.isNull(userRequest)) {
+            log.error("User creation failed. UserRequest is null.");
+            throw new IllegalArgumentException("UserRequest cannot be null.");
+        }
 
         try {
-            if (Objects.nonNull(userRequest)) {
-                UserEntity userEntity = converter.requestToEntity(userRequest);
-                userEntity = userRepository.save(userEntity);
-                userResponse = converter.entityToResponse(userEntity);
-                log.info("User created successfully. User ID: {}", userEntity.getId());
-            } else {
-                log.error("User creation failed. UserRequest is null.");
-            }
-        } catch (DataIntegrityViolationException e) {
-                log.error("Error creating user due to data integrity violation. Details: {}", e.getMessage());
-                // Handle the duplicate value entries
-            } catch (Exception e) {
-                log.error("Error creating user. Details: {}", e.getMessage());
-            }
+            UserEntity userEntity = converter.requestToEntity(userRequest);
+            userEntity = userRepository.save(userEntity);
+            log.info("User created successfully. User ID: {}", userEntity.getId());
+            return converter.entityToResponse(userEntity);
 
-        return userResponse;
+        } catch (DataIntegrityViolationException exception) {
+            log.error("Error creating user due to data integrity violation: {}", exception);
+            throw new DataIntegrityViolationException("Error creating user due to data integrity violation.");
+        } catch (IllegalArgumentException exception) {
+            log.error("Error creating user: {}", exception);
+            throw exception;
+        } catch (Exception exception) {
+            log.error("Error creating user: {}", exception);
+            throw new RuntimeException("Error creating user.");
+        }
     }
 
     @Override
@@ -76,10 +76,12 @@ public class UserServiceImpl implements UserService{
             } else {
                 throw new UserResponseException("User Not Found");
             }
-        } catch (UserResponseException e) {
-            log.error("User id {} not found. Details: {}", id, e.getMessage());
-            System.err.println("UserResponseException: " + e.getMessage());
-            throw e;
+        } catch (UserResponseException exception) {
+            log.error("User id {} not found. Details: {}", id, exception);
+            throw exception;
+        } catch (Exception exception) {
+            log.error("Error finding user by id: {}", exception);
+            throw new RuntimeException("Error finding user by id");
         }
     }
 
@@ -93,12 +95,12 @@ public class UserServiceImpl implements UserService{
                         return converter.entityToResponse(userEntity);
                     })
                     .orElseThrow(() -> new UserResponseException("User Not Found"));
-        } catch (UserResponseException e) {
-            log.error("User id {} not found during update. Details: {}", id, e.getMessage());
-            throw e;
-        } catch (Exception e) {
-            log.error("Error updating user with id {}. Details: {}", id, e.getMessage());
-            throw new UserResponseException("Error updating user");
+        } catch (UserResponseException exception) {
+            log.error("User id {} not found during update. Details: {}", id, exception);
+            throw exception;
+        } catch (Exception exception) {
+            log.error("Error updating user with id {}. Details: {}", id, exception);
+            throw new RuntimeException("Error updating user");
         }
     }
 
@@ -108,14 +110,16 @@ public class UserServiceImpl implements UserService{
             Optional<UserEntity> userEntityOptional = userRepository.findById(id);
             if (userEntityOptional.isPresent()) {
                 userRepository.deleteById(id);
-                 log.info("Deletion of id {} is successful", id);
+                log.info("Deletion of id {} is successful", id);
             } else {
                 throw new UserResponseException("User Not Found");
             }
-        } catch (UserResponseException e) {
-            log.error("User id {} not found", id);
-            System.err.println("UserResponseException: " + e.getMessage());
-            throw e;
+        } catch (UserResponseException exception) {
+            log.error("User id {} not found. Details: {}", id, exception);
+            throw exception;
+        } catch (Exception exception) {
+            log.error("Error deleting user with id {}. Details: {}", id, exception);
+            throw new RuntimeException("Error deleting user");
         }
     }
 
@@ -130,28 +134,21 @@ public class UserServiceImpl implements UserService{
             }
             log.info("Users are displayed");
             return userResponses;
-        } catch (Exception e) {
-            log.error("Error retrieving all users. Details: {}", e.getMessage());
+        } catch (Exception exception) {
+            log.error("Error retrieving all users. Details: {}", exception);
+            throw new RuntimeException("Error retrieving all users");
+        }
+    }
+
+    public Page<UserResponse> PaginationAndSorting(int offset, int pageSize, String field) {
+        try {
+            Page<UserEntity> userEntities = userRepository.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(field)));
+            Page<UserResponse> userResponses = userEntities.map(converter::entityToResponse);
+            log.info("Displaying all users with pagesize = " + pageSize + " and sorting on basis of " + field);
+            return userResponses;
+        } catch (Exception exception) {
+            log.error("Error retrieving all users. Details: {}", exception);
             throw new UserResponseException("Error retrieving all users");
         }
     }
-
-    @Override
-    public UserEntity registerUser(UserEntity userEntity) throws Exception
-    {
-        if(userEntity !=null)
-        {
-            return userRepository.save(userEntity);
-        }
-        throw new Exception("User is null");
-    }
-
-    @Override
-    public Page getUserByPage(int pageIndex, int pageSize, String field)
-    {
-        Sort sort= Sort.by(Sort.Direction.ASC,field);
-        Pageable pageReq= PageRequest.of(pageIndex, pageSize, sort);
-        return userRepository.findAll(pageReq);
-    }
-
 }

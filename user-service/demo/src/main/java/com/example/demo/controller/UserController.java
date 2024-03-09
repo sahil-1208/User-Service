@@ -1,8 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.UserEntity;
-import com.example.demo.excel.ReadDataFromExcel;
-import com.example.demo.exception.UserResponseException;
 import com.example.demo.model.UserRequest;
 import com.example.demo.model.UserResponse;
 import com.example.demo.service.UserService;
@@ -13,9 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -24,90 +20,45 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @PostMapping("/multipart")
     public ResponseEntity<?> uploadUserDetailsExcel(@RequestParam("file") MultipartFile file) {
-
-        if(ReadDataFromExcel.checkExcelFormat(file)) {
-            userService.save(file);
-            return ResponseEntity.ok(Map.of("message","file is upload"));
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("uplod excel file");
-
+        userService.save(file);
+        return ResponseEntity.ok().body("File uploaded successfully.");
     }
 
-    @PostMapping
-    public ResponseEntity<Optional<UserResponse>> createUser(@RequestBody UserRequest userRequest) {
-        UserResponse userResponse = null;
-        try{
-            userResponse = this.userService.create(userRequest);
-            System.out.println(userRequest);
-            return ResponseEntity.ok(Optional.of(userResponse));
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-
+    @PostMapping("/createUser")
+    public ResponseEntity<?> createUser(@RequestBody UserRequest userRequest) {
+        return ResponseEntity.ok().body(userService.create(userRequest));
     }
 
-    @RequestMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
-        UserResponse userResponse = userService.findUserById(id);
-        if(userResponse == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.of(Optional.of(userResponse));
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(userService.findUserById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUserById(@PathVariable Long id, @RequestBody UserRequest userRequest) {
-        try {
-            UserResponse userResponse = userService.updateUserById(id, userRequest);
-            return ResponseEntity.ok().body(userResponse);
-        } catch (UserResponseException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody UserRequest userRequest) {
+        return ResponseEntity.ok().body(userService.updateUserById(id, userRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-
-        try {
-            userService.deleteById(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        userService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserResponse>> getAllUsers(){
+    public ResponseEntity<List<?>> getAllUsers() {
         List<UserResponse> list = userService.getAllUsers();
-        if(list.size()<=0){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (list.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonList("No users found"));
         }
-        return ResponseEntity.of(Optional.of(list));
+        return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/page")
-    public Page<UserEntity> getUsers(@RequestParam int pageIndex, @RequestParam int pageSize, @RequestParam String field)
-    {
-        return userService.getUserByPage(pageIndex, pageSize, field);
+    @GetMapping("/pagination/{offset}/{pageSize}/{field}")
+    public ResponseEntity<Page<?>> PaginationAndSorting(@PathVariable int offset, @PathVariable int pageSize, @PathVariable String field) {
+        Page<UserResponse> userResponses = userService.PaginationAndSorting(offset, pageSize, field);
+        return new ResponseEntity<>(userResponses, HttpStatus.OK);
     }
-
-
-    @PostMapping("/register")
-    public ResponseEntity<UserEntity>register(@RequestBody UserEntity user) throws Exception
-    {
-        if(user!=null)
-        {
-            userService.registerUser(user);
-            return new ResponseEntity<>(user,HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
 }

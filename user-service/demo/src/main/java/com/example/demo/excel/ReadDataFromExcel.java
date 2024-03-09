@@ -110,8 +110,8 @@ public class ReadDataFromExcel {
                 userEntityData.add(userEntity);
             }
             return userEntityData;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
         return userEntityData;
     }
