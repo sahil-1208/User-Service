@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,29 +42,29 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public UserResponse create(UserRequest userRequest) {
-        if (Objects.isNull(userRequest)) {
-            log.error("User creation failed. UserRequest is null.");
-            throw new IllegalArgumentException("UserRequest cannot be null.");
-        }
-
-        try {
-            UserEntity userEntity = converter.requestToEntity(userRequest);
-            userEntity = userRepository.save(userEntity);
-            log.info("User created successfully. User ID: {}", userEntity.getId());
-            return converter.entityToResponse(userEntity);
-
-        } catch (DataIntegrityViolationException exception) {
-            log.error("Error creating user due to data integrity violation: {}", exception);
-            throw new DataIntegrityViolationException("Error creating user due to data integrity violation.");
-        } catch (IllegalArgumentException exception) {
-            log.error("Error creating user: {}", exception);
-            throw exception;
-        } catch (Exception exception) {
-            log.error("Error creating user: {}", exception);
-            throw new RuntimeException("Error creating user.");
-        }
-    }
+//    public UserResponse create(UserRequest userRequest) {
+//        if (Objects.isNull(userRequest)) {
+//            log.error("User creation failed. UserRequest is null.");
+//            throw new IllegalArgumentException("UserRequest cannot be null.");
+//        }
+//
+//        try {
+//            UserEntity userEntity = converter.requestToEntity(userRequest);
+//            userEntity = userRepository.save(userEntity);
+//            log.info("User created successfully. User ID: {}", userEntity.getId());
+//            return converter.entityToResponse(userEntity);
+//
+//        } catch (DataIntegrityViolationException exception) {
+//            log.error("Error creating user due to data integrity violation: {}", exception);
+//            throw new DataIntegrityViolationException("Error creating user due to data integrity violation.");
+//        } catch (IllegalArgumentException exception) {
+//            log.error("Error creating user: {}", exception);
+//            throw exception;
+//        } catch (Exception exception) {
+//            log.error("Error creating user: {}", exception);
+//            throw new RuntimeException("Error creating user.");
+//        }
+//    }
 
     @Override
     public UserResponse findUserById(Long id) {

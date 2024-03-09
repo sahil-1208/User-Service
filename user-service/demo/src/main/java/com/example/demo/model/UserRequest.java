@@ -12,12 +12,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequest {
+
     private String name;
     private String email;
     private String mobile;
     private String username;
     private String location;
     private LocalDate date;
-    private String password;
     private String gender;
+    private String firstName;
+    private String secondName;
+    private String password;
 }

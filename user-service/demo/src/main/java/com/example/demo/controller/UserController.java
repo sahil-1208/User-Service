@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("api/v1/user")
 public class UserController {
 
     @Autowired
@@ -26,15 +26,16 @@ public class UserController {
         return ResponseEntity.ok().body("File uploaded successfully.");
     }
 
-    @PostMapping("/createUser")
-    public ResponseEntity<?> createUser(@RequestBody UserRequest userRequest) {
-        return ResponseEntity.ok().body(userService.create(userRequest));
-    }
+//    @PostMapping("/createUser")
+//    public ResponseEntity<?> createUser(@RequestBody UserRequest userRequest) {
+//        return ResponseEntity.ok().body(userService.create(userRequest));
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok().body(userService.findUserById(id));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody UserRequest userRequest) {
@@ -58,7 +59,6 @@ public class UserController {
 
     @GetMapping("/pagination/{offset}/{pageSize}/{field}")
     public ResponseEntity<Page<?>> PaginationAndSorting(@PathVariable int offset, @PathVariable int pageSize, @PathVariable String field) {
-        Page<UserResponse> userResponses = userService.PaginationAndSorting(offset, pageSize, field);
-        return new ResponseEntity<>(userResponses, HttpStatus.OK);
+        return new ResponseEntity<>(userService.PaginationAndSorting(offset, pageSize, field), HttpStatus.OK);
     }
 }
