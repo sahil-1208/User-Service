@@ -11,8 +11,8 @@
 	<groupId>com.example</groupId>
 	<artifactId>user-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>DatingApp</name>
-	<description>Project for Dating App</description>
+	<name>user-service</name>
+	<description>User Service Project</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

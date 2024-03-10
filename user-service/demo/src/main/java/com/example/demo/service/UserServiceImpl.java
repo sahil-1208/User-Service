@@ -32,9 +32,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Converter converter;
 
+    @Autowired
+    private ReadDataFromExcel readDataFromExcel;
+
     public void save(MultipartFile file) {
         try {
-            List<UserEntity> listEmployee = ReadDataFromExcel.convertExcelToListOfUser(file.getInputStream());
+            List<UserEntity> listEmployee = readDataFromExcel.convertExcelToListOfUser(file.getInputStream());
             userRepository.saveAll(listEmployee);
         } catch (IOException exception) {
             log.error("Error saving data from Excel: {}", exception);

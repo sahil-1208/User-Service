@@ -14,13 +14,13 @@ import java.time.LocalDate;
 
 @ComponentScan(basePackages = {"com.example.demo"})
 @SpringBootApplication
-public class DatingAppApplication implements CommandLineRunner {
+public class UserServiceApplication implements CommandLineRunner {
 
     @Autowired
     private UserRepository userRepository;
 
     public static void main(String[] args) {
-        SpringApplication.run(DatingAppApplication.class, args);
+        SpringApplication.run(UserServiceApplication.class, args);
 
     }
 
@@ -28,7 +28,7 @@ public class DatingAppApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         UserEntity adminAccount = userRepository.findByRole(Role.ADMIN);
         if (null == adminAccount) {
-            // id, date, email, first_name, gender, location, mobile, name, password, role, second_name, username
+            // date, email, first_name, gender, location, mobile, name, password, role, second_name, username
             UserEntity user = new UserEntity();
             user.setEmail("admin@gmail.com");
             user.setDate(LocalDate.now());

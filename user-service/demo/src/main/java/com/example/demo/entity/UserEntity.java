@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @Table(
         name = "user",
-        schema = "jwt_token",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "email_unique",
@@ -69,10 +68,9 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String secondName;
 
-    @Column(nullable = false)
-
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(nullable = false)
+    private Role role = Role.USER;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

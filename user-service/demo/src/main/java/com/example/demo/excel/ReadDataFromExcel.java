@@ -2,9 +2,13 @@ package com.example.demo.excel;
 
 import com.example.demo.entity.UserEntity;
 import com.example.demo.enums.Gender;
+import com.example.demo.enums.Role;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -19,11 +23,15 @@ import java.util.List;
 @Component
 public class ReadDataFromExcel {
 
-    public static boolean checkExcelFormat(MultipartFile file) {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public boolean checkExcelFormat(MultipartFile file) {
         return file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
 
-    public static List<UserEntity> convertExcelToListOfUser(InputStream is) {
+    public List<UserEntity> convertExcelToListOfUser(InputStream is) {
+
         List<UserEntity> userEntityData = new ArrayList<UserEntity>();
 
         try {
@@ -61,9 +69,9 @@ public class ReadDataFromExcel {
                             break;
                         case 2:
                             if (cell.getCellType() == CellType.STRING) {
-                                userEntity.setPassword(cell.getStringCellValue());
+                                userEntity.setPassword(passwordEncoder.encode(cell.getStringCellValue()));
                             } else if (cell.getCellType() == CellType.NUMERIC) {
-                                userEntity.setPassword(String.valueOf((int) cell.getNumericCellValue()));
+                                userEntity.setPassword(passwordEncoder.encode(String.valueOf((int) cell.getNumericCellValue())));
                             }
                             break;
                         case 3:
@@ -91,7 +99,6 @@ public class ReadDataFromExcel {
                             if (cell.getCellType() == CellType.STRING) {
                                 userEntity.setDate(LocalDate.parse(cell.getStringCellValue()));
                             } else if (cell.getCellType() == CellType.NUMERIC) {
-                                // Handle date parsing from numeric cell value
                                 userEntity.setDate(cell.getLocalDateTimeCellValue().toLocalDate());
                             }
                             break;
@@ -101,6 +108,23 @@ public class ReadDataFromExcel {
                             } else if (cell.getCellType() == CellType.NUMERIC) {
                                 userEntity.setGender(Gender.valueOf(String.valueOf((int) cell.getNumericCellValue())));
                             }
+                            break;
+                        case 8:
+                            if (cell.getCellType() == CellType.STRING) {
+                                userEntity.setFirstName(cell.getStringCellValue());
+                            } else if (cell.getCellType() == CellType.NUMERIC) {
+                                userEntity.setFirstName(String.valueOf((int) cell.getNumericCellValue()));
+                            }
+                            break;
+                        case 9:
+                            if (cell.getCellType() == CellType.STRING) {
+                                userEntity.setSecondName(cell.getStringCellValue());
+                            } else if (cell.getCellType() == CellType.NUMERIC) {
+                                userEntity.setSecondName(String.valueOf((int) cell.getNumericCellValue()));
+                            }
+                            break;
+                        case 10:
+                            userEntity.setRole(Role.USER);
                             break;
                         default:
                             break;
