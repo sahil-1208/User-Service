@@ -1,10 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.JWTAuthenticationResponse;
-import com.example.demo.dto.RefreshTokenRequest;
-import com.example.demo.dto.SignInRequest;
-import com.example.demo.model.UserRequest;
-import com.example.demo.model.UserResponse;
+import com.example.demo.request.SignUpRequest;
+import com.example.demo.response.JWTAuthenticationResponse;
+import com.example.demo.request.RefreshTokenRequest;
+import com.example.demo.request.SignInRequest;
+import com.example.demo.request.UserRequest;
+import com.example.demo.response.UserResponse;
 import com.example.demo.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +22,17 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponse> signup(@RequestBody UserRequest userRequest){
-        return ResponseEntity.ok(authenticationService.signup(userRequest));
+    public ResponseEntity<UserResponse> signup(@RequestBody SignUpRequest signUpRequest) {
+        return ResponseEntity.ok(authenticationService.signup(signUpRequest));
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<JWTAuthenticationResponse> signIn(@RequestBody SignInRequest signinRequest){
+    public ResponseEntity<JWTAuthenticationResponse> signIn(@RequestBody SignInRequest signinRequest) {
         return ResponseEntity.ok(authenticationService.signIn(signinRequest));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<JWTAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest){
+    public ResponseEntity<JWTAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
     }
 }

@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.response;
 
 import lombok.Data;
 
@@ -7,6 +7,7 @@ public class JWTAuthenticationResponse {
 
     private String token;
     private String refreshtoken;
+    private long id;
 
 
 }

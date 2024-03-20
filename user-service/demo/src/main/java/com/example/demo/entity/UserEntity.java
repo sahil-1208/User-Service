@@ -97,7 +97,7 @@ public class UserEntity implements UserDetails {
         return true;
     }
     public String getUsername(){
-        return email;
+        return username;
     }
 
 }

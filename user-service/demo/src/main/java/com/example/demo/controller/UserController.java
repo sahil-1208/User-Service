@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.UserRequest;
-import com.example.demo.model.UserResponse;
+import com.example.demo.request.UserRequest;
+import com.example.demo.response.UserResponse;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,11 +25,6 @@ public class UserController {
         userService.save(file);
         return ResponseEntity.ok().body("File uploaded successfully.");
     }
-
-//    @PostMapping("/createUser")
-//    public ResponseEntity<?> createUser(@RequestBody UserRequest userRequest) {
-//        return ResponseEntity.ok().body(userService.create(userRequest));
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {

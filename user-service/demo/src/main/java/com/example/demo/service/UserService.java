@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.model.UserRequest;
-import com.example.demo.model.UserResponse;
+import com.example.demo.request.UserRequest;
+import com.example.demo.response.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

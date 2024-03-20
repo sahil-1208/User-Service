@@ -8,7 +8,7 @@ import java.util.Map;
 @Service
 public interface JWTService {
 
-    public String extractUserName(String token);
+    public String extractUsername(String token);
 
     public String generateToken(UserDetails userDetails);
 

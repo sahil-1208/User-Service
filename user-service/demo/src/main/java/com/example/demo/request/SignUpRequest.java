@@ -1,17 +1,15 @@
-package com.example.demo.model;
+package com.example.demo.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequest {
+public class SignUpRequest {
 
     private String name;
     private String email;
