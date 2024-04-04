@@ -14,34 +14,11 @@ import java.time.LocalDate;
 
 
 @SpringBootApplication
-public class UserServiceApplication implements CommandLineRunner {
-
-    @Autowired
-    private UserRepository userRepository;
+public class UserServiceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(UserServiceApplication.class, args);
 
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        UserEntity adminAccount = userRepository.findByRole(Role.ADMIN);
-        if (null == adminAccount) {
-            // date, email, first_name, gender, location, mobile, name, password, role, second_name, username
-            UserEntity user = new UserEntity();
-            user.setEmail("admin@gmail.com");
-            user.setDate(LocalDate.now());
-            user.setGender(Gender.MALE);
-            user.setLocation("adminLoc");
-            user.setMobile("9999234589");
-            user.setUsername("adminExample");
-            user.setFirstName("admin");
-            user.setSecondName("example");
-            user.setRole(Role.ADMIN);
-            user.setPassword(new BCryptPasswordEncoder().encode("admin"));
-            userRepository.save(user);
-        }
     }
 
 }
