@@ -11,6 +11,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class SignUpRequest {
 
-    private String email,mobile,username,location,gender,firstName,secondName,password;
+    private String email, mobile, username, location, gender, firstName, secondName, password;
     private LocalDate date;
 }

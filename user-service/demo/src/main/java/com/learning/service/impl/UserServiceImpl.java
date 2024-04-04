@@ -7,6 +7,7 @@ import com.learning.response.UserResponse;
 import com.learning.repository.UserRepository;
 import com.learning.service.UserService;
 import com.learning.utility.Converter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,18 +21,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private static UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private static Converter converter;
+    private final Converter converter;
 
-    @Autowired
-    private ReadDataFromExcel readDataFromExcel;
+    private final ReadDataFromExcel readDataFromExcel;
 
     public void save(MultipartFile file) {
         try {
@@ -56,16 +55,19 @@ public class UserServiceImpl implements UserService {
                 .map(userEntity -> {
                     userEntity = converter.updateEntity(userRequest, userEntity);
                     userEntity = userRepository.save(userEntity);
-                    return converter.entityToResponse(userEntity);})
+                    return converter.entityToResponse(userEntity);
+                })
                 .orElseThrow(() -> new UserResponseException("User Not Found"));
     }
 
     @Override
     public void deleteById(Long id) {
         userRepository.findById(id)
-                .map(userEntity -> { userRepository.deleteById(id);
+                .map(userEntity -> {
+                    userRepository.deleteById(id);
                     log.info("Deletion of id {} is successful", id);
-                    return userEntity;})
+                    return userEntity;
+                })
                 .orElseThrow(() -> new UserResponseException("User Not Found"));
     }
 

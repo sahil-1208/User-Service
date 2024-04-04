@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,10 +21,12 @@ import java.util.List;
                 @UniqueConstraint(
                         name = "email_unique",
                         columnNames = "email"
-                ), @UniqueConstraint(
-                name = "mobile_unique",
-                columnNames = "mobile"
-        ), @UniqueConstraint(
+                ),
+                @UniqueConstraint(
+                        name = "mobile_unique",
+                        columnNames = "mobile"
+                ),
+                @UniqueConstraint(
                 name = "username_unique",
                 columnNames = "username"
         )
@@ -67,7 +70,7 @@ public class UserEntity implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private Role role = Role.USER;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -93,7 +96,8 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-    public String getUsername(){
+
+    public String getUsername() {
         return username;
     }
 

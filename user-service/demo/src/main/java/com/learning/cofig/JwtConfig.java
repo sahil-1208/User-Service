@@ -10,6 +10,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "jwt")
 public class JwtConfig {
-    private long tokenExpiration;
-    private long refreshTokenExpiration;
+    private Long tokenExpiration;
+    private Long refreshTokenExpiration;
 }

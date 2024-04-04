@@ -14,5 +14,5 @@ public interface JWTService {
 
     boolean isTokenValid(String token, UserDetails userDetails);
 
-    String generateRefereshToken(Map<String,Object> extraClaims, UserDetails userDetails);
+    String generateRefereshToken(Map<String, Object> extraClaims, UserDetails userDetails);
 }

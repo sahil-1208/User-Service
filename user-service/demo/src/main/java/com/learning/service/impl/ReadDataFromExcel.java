@@ -1,6 +1,5 @@
 package com.learning.service.impl;
 
-
 import com.learning.entity.UserEntity;
 import com.learning.enums.Gender;
 import com.learning.enums.Role;
@@ -18,9 +17,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 @Slf4j
 @Component
 public class ReadDataFromExcel {
@@ -34,7 +35,7 @@ public class ReadDataFromExcel {
 
     public List<UserEntity> convertExcelToListOfUser(InputStream is) {
 
-        List<UserEntity> userEntityData = new ArrayList<UserEntity>();
+        List<UserEntity> userEntityData = new ArrayList<>();
 
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(is);
@@ -57,23 +58,28 @@ public class ReadDataFromExcel {
                     cellId++;
                 }
                 userEntityData.add(userEntity);
-                log.info("Data Added");
+                log.info("Data Added: {}", userEntity);
             }
-            return userEntityData;
         } catch (Exception exception) {
             exception.printStackTrace();
-            log.error("FATAL ERROR");
+            log.error("Error while reading Excel file: {}", exception.getMessage());
         }
         return userEntityData;
     }
 
     private void setCellValue(UserEntity userEntity, int cellId, Cell cell) {
         if (cell.getCellType() == CellType.STRING) {
-            setColumnValue(userEntity, cellId, cell.getStringCellValue());
-            log.info("String Data Display");
+            setColumnValue(userEntity, cellId, cell.getStringCellValue().trim());
+            log.info("String Data Display: {}", cell.getStringCellValue());
         } else if (cell.getCellType() == CellType.NUMERIC) {
-            setColumnValue(userEntity, cellId, String.valueOf((int) cell.getNumericCellValue()));
-            log.info("Numeric Data Display");
+            if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
+                LocalDate date = cell.getLocalDateTimeCellValue().toLocalDate();
+                setColumnValue(userEntity, cellId, date.toString());
+                log.info("Date Data Display: {}", date.toString());
+            } else {
+                setColumnValue(userEntity, cellId, String.valueOf((int) cell.getNumericCellValue()));
+                log.info("Numeric Data Display: {}", cell.getNumericCellValue());
+            }
         }
     }
 
@@ -82,7 +88,6 @@ public class ReadDataFromExcel {
         switch (cellId) {
             case 0:
                 userEntity.setMobile(value);
-
                 break;
             case 1:
                 userEntity.setEmail(value);
@@ -97,10 +102,11 @@ public class ReadDataFromExcel {
                 userEntity.setLocation(value);
                 break;
             case 5:
-                userEntity.setDate(LocalDate.parse(value));
+                LocalDate date = LocalDate.parse(value, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                userEntity.setDate(date);
                 break;
             case 6:
-                userEntity.setGender(Gender.valueOf(value));
+                userEntity.setGender(Gender.valueOf(value.toUpperCase()));
                 break;
             case 7:
                 userEntity.setFirstName(value);
@@ -115,6 +121,4 @@ public class ReadDataFromExcel {
                 break;
         }
     }
-
-
 }

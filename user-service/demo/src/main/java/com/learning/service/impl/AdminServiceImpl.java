@@ -12,13 +12,16 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+
 @Service
 @Slf4j
 public class AdminServiceImpl implements AdminService {
+
     @Autowired
     private Converter converter;
     @Autowired
     private UserRepository userRepository;
+
     @Override
     public UserResponse adminSignup(AdminSignUpRequest adminSignUpRequest) {
         if (Objects.isNull(adminSignUpRequest)) {

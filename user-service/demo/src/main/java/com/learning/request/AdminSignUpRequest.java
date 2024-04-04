@@ -11,6 +11,6 @@ import java.time.LocalDate;
 @Builder
 public class AdminSignUpRequest {
 
-    private String email,mobile,username,location,gender,firstName,secondName,password;
+    private String email, mobile, username, location, gender, firstName, secondName, password;
     private LocalDate date;
 }

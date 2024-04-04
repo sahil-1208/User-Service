@@ -6,5 +6,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface AdminService {
-     UserResponse adminSignup(AdminSignUpRequest adminSignUpRequest);
+    UserResponse adminSignup(AdminSignUpRequest adminSignUpRequest);
 }

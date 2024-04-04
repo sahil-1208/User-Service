@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 @Component
 @RequiredArgsConstructor
 @Service
-public class ServiceUsersImpl  implements ServiceUsers {
+public class ServiceUsersImpl implements ServiceUsers {
 
-private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
             @Override
-            public UserDetails loadUserByUsername(String username)  {
+            public UserDetails loadUserByUsername(String username) {
                 return userRepository.findByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found "));
             }
